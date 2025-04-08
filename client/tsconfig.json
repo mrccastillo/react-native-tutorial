@@ -6,5 +6,15 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "app/(auth)/_layout.jsx",
+    "app/(auth)/index.jsx",
+    "app/(auth)/signup.jsx",
+    "app/_layout.jsx",
+    "app/index.jsx"
+  ]
 }
