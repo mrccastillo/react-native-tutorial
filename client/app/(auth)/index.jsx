@@ -4,27 +4,41 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
+  Platform,
 } from "react-native";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
+import { KeyboardAvoidingView } from "react-native";
 import { Image } from "react-native";
 import styles from "../../assets/styles/login.styles";
 import COLORS from "../../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import { setStatusBarBackgroundColor } from "expo-status-bar";
+import axios from "axios";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isShowPassword, setIsShowPassword] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-  const handleLogin = () => {
-    setIsLoading(true);
+  const handleLogin = async () => {
+    const formData = { email, password };
+    console.log(formData);
 
-    setTimeout(() => {
+    try {
+      setIsLoading(true);
+      const response = await axios.post(
+        "http://192.168.0.71:8000/api/auth/login",
+        formData
+      );
+      console.log(response.data);
+      router.push("/(auth)/signup");
+    } catch (e) {
+      console.error("Something went wrong while you're logging in", e);
+    } finally {
       setIsLoading(false);
-    }, 3000);
+    }
   };
 
   return (
