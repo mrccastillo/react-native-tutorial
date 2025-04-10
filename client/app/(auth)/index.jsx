@@ -5,47 +5,34 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Platform,
+  Alert,
 } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { KeyboardAvoidingView } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Image } from "react-native";
 import styles from "../../assets/styles/login.styles";
 import COLORS from "../../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { useAuthStore } from "@/store/AuthStore";
-import axios from "axios";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isShowPassword, setIsShowPassword] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const { setToken, setUser } = useAuthStore();
+  const { login, isLoading } = useAuthStore();
   const router = useRouter();
 
   const handleLogin = async () => {
-    const formData = { email, password };
-    console.log(formData);
+    const result = await login(email, password);
 
-    try {
-      setIsLoading(true);
-      const response = await axios.post(
-        "http://192.168.0.71:8000/api/auth/login",
-        formData
-      );
-      console.log(response.data);
-      const data = response.data;
-      await AsyncStorage.setItem("token", data.token);
-      await AsyncStorage.setItem("user", JSON.stringify(data));
-      setUser(data);
-      setToken(data.token);
+    if (result.success) {
       router.push("/(auth)/signup");
-    } catch (e) {
-      console.error("Something went wrong while you're logging in", e);
-    } finally {
-      setIsLoading(false);
+    } else {
+      Alert.alert(
+        "Login failed",
+        "Please check your email and password and try again."
+      );
     }
   };
 

@@ -6,8 +6,6 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useRouter } from "expo-router";
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "@/assets/styles/signup.styles";
 import COLORS from "@/constants/colors";
@@ -20,31 +18,16 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [isShowPassword, setIsShowPassword] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const { user, token, setToken, setUser } = useAuthStore();
+  const { signup } = useAuthStore();
 
   const router = useRouter();
 
   const handleSignup = async () => {
-    const formData = { username, email, password };
-
-    try {
-      setIsLoading(true);
-
-      const response = await axios.post(
-        "http://192.168.0.71:8000/api/auth/register",
-        formData
-      );
-      const data = response.data;
-      await AsyncStorage.setItem("token", data.token);
-      await AsyncStorage.setItem("user", JSON.stringify(data));
-      setUser(data);
-      setToken(data.token);
-      // set({ token: data.token, user: data.user });
+    const result = await signup(username, email, password);
+    if (result.success) {
       router.push("/(auth)/");
-    } catch (e) {
-      console.error("Something went wrong while signing up", e);
-    } finally {
-      setIsLoading(false);
+    } else {
+      Alert.alert("Signup failed", "Please check your details and try again.");
     }
   };
 
