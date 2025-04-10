@@ -4,8 +4,9 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from "react-native";
-import { useRouter } from "expo-router";
+import { useRouter, Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "@/assets/styles/signup.styles";
 import COLORS from "@/constants/colors";
@@ -17,8 +18,7 @@ export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isShowPassword, setIsShowPassword] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const { signup } = useAuthStore();
+  const { signup, isLoading } = useAuthStore();
 
   const router = useRouter();
 
@@ -115,6 +115,14 @@ export default function Signup() {
               <Text style={styles.buttonText}>Sign Up</Text>
             )}
           </TouchableOpacity>
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>Already have an account?</Text>
+            <Link href="/" asChild>
+              <TouchableOpacity>
+                <Text style={styles.link}>Login</Text>
+              </TouchableOpacity>
+            </Link>
+          </View>
         </View>
       </View>
     </View>

@@ -12,7 +12,7 @@ export const useAuthStore = create((set) => ({
     try {
       set({ isLoading: true });
       const response = await axios.post(
-        "http://192.168.0.71:8000/api/auth/login",
+        "https://react-native-tutorial-2.onrender.com/api/auth/login",
         formData
       );
 
@@ -33,10 +33,12 @@ export const useAuthStore = create((set) => ({
       set({ isLoading: true });
 
       const response = await axios.post(
-        "http://192.168.0.71:8000/api/auth/register",
+        "https://react-native-tutorial-2.onrender.com/api/auth/register",
         formData
       );
+      console.log(response.data);
       const data = response.data;
+
       await AsyncStorage.setItem("token", data.token);
       await AsyncStorage.setItem("user", JSON.stringify(data));
 
