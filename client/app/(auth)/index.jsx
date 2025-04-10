@@ -8,11 +8,13 @@ import {
 } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { KeyboardAvoidingView } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Image } from "react-native";
 import styles from "../../assets/styles/login.styles";
 import COLORS from "../../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
+import { useAuthStore } from "@/store/AuthStore";
 import axios from "axios";
 
 export default function Login() {
@@ -20,6 +22,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [isShowPassword, setIsShowPassword] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const { setToken, setUser } = useAuthStore();
   const router = useRouter();
 
   const handleLogin = async () => {
@@ -33,6 +36,11 @@ export default function Login() {
         formData
       );
       console.log(response.data);
+      const data = response.data;
+      await AsyncStorage.setItem("token", data.token);
+      await AsyncStorage.setItem("user", JSON.stringify(data));
+      setUser(data);
+      setToken(data.token);
       router.push("/(auth)/signup");
     } catch (e) {
       console.error("Something went wrong while you're logging in", e);

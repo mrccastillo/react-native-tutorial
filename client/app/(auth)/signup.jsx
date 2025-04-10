@@ -7,10 +7,12 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "@/assets/styles/signup.styles";
 import COLORS from "@/constants/colors";
 import { useState } from "react";
+import { useAuthStore } from "@/store/AuthStore";
 
 export default function Signup() {
   const [username, setUsername] = useState("");
@@ -18,6 +20,8 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [isShowPassword, setIsShowPassword] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const { user, token, setToken, setUser } = useAuthStore();
+
   const router = useRouter();
 
   const handleSignup = async () => {
@@ -25,11 +29,17 @@ export default function Signup() {
 
     try {
       setIsLoading(true);
+
       const response = await axios.post(
         "http://192.168.0.71:8000/api/auth/register",
         formData
       );
-      console.log(response.data);
+      const data = response.data;
+      await AsyncStorage.setItem("token", data.token);
+      await AsyncStorage.setItem("user", JSON.stringify(data));
+      setUser(data);
+      setToken(data.token);
+      // set({ token: data.token, user: data.user });
       router.push("/(auth)/");
     } catch (e) {
       console.error("Something went wrong while signing up", e);
