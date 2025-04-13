@@ -9,6 +9,7 @@ import {
   Alert,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import styles from "../../assets/styles/create.styles";
@@ -43,12 +44,24 @@ export default function Create() {
           quality: 0.5,
           base64: true,
         });
+        a;
 
         if (!result.canceled) {
           setImage(result.assets[0].uri);
+
+          if (result.assets[0].base64) {
+            setImageBase64(result.assets[0].base64);
+          } else {
+            const base64 = FileSystem.readAsStringAsync(result.assets[0].uri, {
+              encoding: FileSystem.EncodingType.Base64,
+            });
+            setImageBase64(base64);
+          }
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
