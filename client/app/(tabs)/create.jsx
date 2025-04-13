@@ -7,6 +7,7 @@ import {
   Image,
   Platform,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
@@ -20,6 +21,7 @@ export default function Create() {
   const [title, setTitle] = useState("");
   const [rating, setRating] = useState(0);
   const [image, setImage] = useState(null);
+  const [caption, setCaption] = useState("");
   const [imageBase64, setImageBase64] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,7 +30,6 @@ export default function Create() {
       if (Platform.OS !== "web") {
         const { status } =
           await ImagePicker.requestMediaLibraryPermissionsAsync();
-        console.log(status);
         if (status !== "granted") {
           Alert.alert(
             "Permission denied",
@@ -44,7 +45,6 @@ export default function Create() {
           quality: 0.5,
           base64: true,
         });
-        a;
 
         if (!result.canceled) {
           setImage(result.assets[0].uri);
@@ -64,8 +64,26 @@ export default function Create() {
     }
   };
 
+  const handleSubmit = async () => {
+    const formData = {
+      title: title,
+      rating: rating,
+      caption: caption,
+      image: imageBase64,
+    };
+
+    setIsLoading(true);
+
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  };
+
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{ paddingBottom: 20 }}
+    >
       <View style={styles.card}>
         <View style={styles.header}>
           <Text style={styles.title}>Add Book Recomendation</Text>
@@ -84,7 +102,7 @@ export default function Create() {
                   placeholderTextColor={COLORS.placeholderText}
                   autoCapitalize="none"
                   value={title}
-                  onChange={setTitle}
+                  onChangeText={setTitle}
                 ></TextInput>
               </View>
             </View>
@@ -122,6 +140,37 @@ export default function Create() {
               )}
             </TouchableOpacity>
           </View>
+          <View style={styles.formGroup}>
+            <Text style={styles.label}>Description</Text>
+            <TextInput
+              style={styles.textArea}
+              placeholder="Book Description"
+              placeholderTextColor={COLORS.placeholderText}
+              value={caption}
+              onChangeText={setCaption}
+              autoCapitalize="none"
+              multiline
+            />
+          </View>
+          <TouchableOpacity
+            disabled={isLoading}
+            style={styles.button}
+            onPress={handleSubmit}
+          >
+            {isLoading ? (
+              <ActivityIndicator color={COLORS.white} />
+            ) : (
+              <>
+                <Ionicons
+                  name="cloud-upload-outline"
+                  color={COLORS.white}
+                  size={20}
+                  style={styles.buttonIcon}
+                />
+                <Text style={styles.buttonText}>Submit</Text>
+              </>
+            )}
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
