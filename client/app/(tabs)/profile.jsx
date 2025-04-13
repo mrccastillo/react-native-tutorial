@@ -7,7 +7,7 @@ export default function Profile() {
 
   return (
     <View>
-      <Text>Hello, {user.username}</Text>
+      <Text>Hello, {user && user.username}</Text>
       <TouchableOpacity onPress={logout}>
         <Text>Logout</Text>
       </TouchableOpacity>

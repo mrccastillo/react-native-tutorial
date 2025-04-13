@@ -26,9 +26,7 @@ export default function Login() {
   const handleLogin = async () => {
     const result = await login(email, password);
 
-    if (result.success) {
-      router.push("/(auth)/signup");
-    } else {
+    if (!result.success) {
       Alert.alert(
         "Login failed",
         "Please check your email and password and try again."

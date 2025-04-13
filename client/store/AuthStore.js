@@ -1,4 +1,5 @@
 import { create } from "zustand";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
@@ -6,6 +7,7 @@ export const useAuthStore = create((set) => ({
   user: null,
   token: null,
   isLoading: false,
+
   login: async (email, password) => {
     const formData = { email, password };
 
