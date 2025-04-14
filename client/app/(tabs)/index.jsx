@@ -10,9 +10,9 @@ export default function Home() {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
+
         const response = await axios.get(
-          "https://react-native-tutorial-2.onrender.com/api/books",
-          formData,
+          "https://react-native-tutorial-2.onrender.com/api/books"
           {
             headers: {
               Authorization: `${token}`,
@@ -25,10 +25,13 @@ export default function Home() {
         console.error("Error: ", e);
       }
     };
+    fetchBooks();
   });
 
   const renderItem = () => {
-    <View></View>;
+    <View style={styles.bookCard}>
+      <View style={styles.bookHeader}></View>
+    </View>;
   };
 
   return (
