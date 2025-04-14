@@ -102,6 +102,11 @@ export default function Create() {
       );
       setIsLoading(false);
       Alert.alert(response.data.message);
+      setTitle("");
+      setRating(0);
+      setImage(null);
+      setCaption("");
+      setImageBase64("");
       router.push("(tabs)/");
     } catch (e) {
       console.error("Error:", e);
