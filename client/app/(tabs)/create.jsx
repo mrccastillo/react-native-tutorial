@@ -9,6 +9,7 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
+import { useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import { Ionicons } from "@expo/vector-icons";
@@ -26,6 +27,7 @@ export default function Create() {
   const [caption, setCaption] = useState("");
   const [imageBase64, setImageBase64] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const { token } = useAuthStore();
 
   const pickImage = async () => {
@@ -45,7 +47,7 @@ export default function Create() {
           mediaTypes: "images",
           allowsEditing: true,
           aspect: [4, 3],
-          quality: 0.5,
+          quality: 0.3,
           base64: true,
         });
 
@@ -90,7 +92,7 @@ export default function Create() {
       };
 
       const response = await axios.post(
-        "http://192.168.0.71:8000/api/books",
+        "https://react-native-tutorial-2.onrender.com/api/books",
         formData,
         {
           headers: {
@@ -100,6 +102,7 @@ export default function Create() {
       );
       setIsLoading(false);
       Alert.alert(response.data.message);
+      router.push("(tabs)/");
     } catch (e) {
       console.error("Error:", e);
       setIsLoading(false);
