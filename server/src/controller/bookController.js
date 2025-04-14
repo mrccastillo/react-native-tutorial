@@ -48,8 +48,10 @@ export const createBook = async (req, res) => {
       user: userId,
     });
 
+    console.log(newBook);
+
     const savedBook = await newBook.save();
-    res.status(201).json(savedBook, { message });
+    res.status(201).json({ savedBook, message });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
