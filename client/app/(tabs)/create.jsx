@@ -15,6 +15,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import styles from "../../assets/styles/create.styles";
 import COLORS from "../../constants/colors";
+import { useAuthStore } from "@/store/AuthStore";
+import axios from "axios";
 import React from "react";
 
 export default function Create() {
@@ -24,6 +26,7 @@ export default function Create() {
   const [caption, setCaption] = useState("");
   const [imageBase64, setImageBase64] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { token } = useAuthStore();
 
   const pickImage = async () => {
     try {
@@ -65,18 +68,42 @@ export default function Create() {
   };
 
   const handleSubmit = async () => {
-    const formData = {
-      title: title,
-      rating: rating,
-      caption: caption,
-      image: imageBase64,
-    };
+    if (!title || !rating || !caption || !image) {
+      return Alert.alert("All fields required", "Please fill all the fields");
+    }
 
-    setIsLoading(true);
+    try {
+      setIsLoading(true);
+      const uriParts = image.split(".");
+      const fileType = uriParts[uriParts.length - 1];
+      const imageType = fileType
+        ? `image/${fileType.toLowerCase()}`
+        : "image/jpeg";
 
-    setTimeout(() => {
+      const imageURL = `data:${imageType};base64,${imageBase64}`;
+
+      const formData = {
+        title: title,
+        rating: rating,
+        caption: caption,
+        image: imageURL,
+      };
+
+      const response = await axios.post(
+        "http://192.168.0.71:8000/api/books",
+        formData,
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      );
       setIsLoading(false);
-    }, 2000);
+      Alert.alert(response.data.message);
+    } catch (e) {
+      console.error("Error:", e);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -127,7 +154,11 @@ export default function Create() {
             <Text style={styles.label}>Image</Text>
             <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
               {image ? (
-                <Image source={{ uri: image }} style={styles.previewImage} />
+                <Image
+                  source={{ uri: image }}
+                  style={styles.previewImage}
+                  resizeMode="cover"
+                />
               ) : (
                 <View style={styles.placeholderContainer}>
                   <Ionicons
