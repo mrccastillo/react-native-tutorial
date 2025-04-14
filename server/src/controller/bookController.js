@@ -35,9 +35,9 @@ export const createBook = async (req, res) => {
     }
 
     const uploadResponse = await cloudinary.uploader.upload(image);
-    console.log(uploadResponse);
+    // console.log(uploadResponse);
     const imageUrl = uploadResponse.secure_url;
-    console.log(imageUrl);
+    // console.log(imageUrl);
 
     // console.log("newBook");
     const newBook = new Book({
@@ -51,7 +51,7 @@ export const createBook = async (req, res) => {
     console.log(newBook);
 
     const savedBook = await newBook.save();
-    res.status(201).json({ savedBook, message });
+    res.status(201).json({ savedBook, message: "Book added successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
