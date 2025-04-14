@@ -3,7 +3,7 @@ import cron from "cron";
 
 const job = new cron.CronJob("*/14 * * * *", async () => {
   https
-    .get(`${process.env.URL}`, (res) => {
+    .get(`${process.env.URL}/alive`, (res) => {
       if (res.statusCode === 200) {
         console.log("Cron job executed successfully.");
       } else {

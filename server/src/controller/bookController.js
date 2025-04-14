@@ -35,8 +35,11 @@ export const createBook = async (req, res) => {
     }
 
     const uploadResponse = await cloudinary.uploader.upload(image);
-    const imageUrl = uploadResponse.secure_url; // Get the secure URL from Cloudinary response
+    console.log(uploadResponse);
+    const imageUrl = uploadResponse.secure_url;
+    console.log(imageUrl);
 
+    // console.log("newBook");
     const newBook = new Book({
       title,
       image: imageUrl,

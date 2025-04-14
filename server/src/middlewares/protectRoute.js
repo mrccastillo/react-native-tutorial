@@ -9,7 +9,8 @@ const protectRoute = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.userId = decoded._id; // Assuming the token contains user ID
+    // console.log(decoded);
+    req.userId = decoded.user._id; // Assuming the token contains user ID
     next();
   } catch (error) {
     return res.status(403).json({ message: "Forbidden" });

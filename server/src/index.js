@@ -23,7 +23,7 @@ app.use(cors());
 app.use("/api/auth", authRoutes);
 app.use("/api/books", protectRoute, bookRoutes);
 
-app.get("/", (req, res) => {
+app.get("/alive", (req, res) => {
   res.send("API is running...");
 });
 
